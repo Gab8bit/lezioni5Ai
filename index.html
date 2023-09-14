@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elenco dei PDF</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+    <div class="container">
+        <h3>Elenco delle Lezioni</h3>
+        <ul class="collection">
+            <!-- Qui verranno inseriti dinamicamente gli elementi dell'elenco dei PDF -->
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchPdfList();
+        });
+
+        async function fetchPdfList() {
+            try {
+                const response = await fetch('elenco_pdf.php'); // Modifica questo percorso in base al tuo server
+                const data = await response.json();
+
+                const pdfList = document.querySelector('.collection');
+
+                data.forEach(file => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('collection-item');
+                    listItem.innerHTML = `
+                        <div>${file.name}
+                            <a href="pdf/${file.name}" class="secondary-content" download>
+                                <i class="material-icons">cloud_download</i>
+                            </a>
+                            <a href="pdf/${file.name}" target="_blank" class="secondary-content">
+                                <i class="material-icons">remove_red_eye</i>
+                            </a>
+                        </div>
+                    `;
+                    pdfList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Errore durante il recupero dell\'elenco dei PDF:', error);
+            }
+        }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
